@@ -17,11 +17,44 @@ function insertData() {
             connectionString: "postgresql://neondb_owner:xgdFNrXR7I3M@ep-bitter-feather-a5bvattm.us-east-2.aws.neon.tech/neondb?sslmode=require",
         });
         yield client.connect();
-        const res = yield client.query(`
+        try {
+            const res = yield client.query(`
       INSERT INTO users (username,email,password)
-      VALUES ('SHREETEJA','shreeteja@gmail.com','87654321')
+      VALUES ('A','aruna@gmail.com','87654321')
     `);
-        console.log(res);
+            console.log(res);
+        }
+        catch (e) {
+            console.log(e);
+        }
+        finally {
+            client.end();
+        }
     });
 }
-insertData();
+function getData(email) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const client = new pg_1.Client({
+            connectionString: "postgresql://neondb_owner:xgdFNrXR7I3M@ep-bitter-feather-a5bvattm.us-east-2.aws.neon.tech/neondb?sslmode=require",
+        });
+        yield client.connect();
+        try {
+            const query = "SELECT * FROM USERS WHERE EMAIL = $1";
+            const values = [email];
+            const res = yield client.query(query, values);
+            if (res.rows.length > 0) {
+                console.log(res.rows[0]);
+            }
+            else {
+                console.log("Not found");
+            }
+        }
+        catch (e) {
+            console.log(e);
+        }
+        finally {
+            client.end();
+        }
+    });
+}
+getData("aruna@gmail.com");
